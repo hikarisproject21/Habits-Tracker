@@ -441,11 +441,7 @@
         const done = habits.filter(h => dayData[h]).length;
 
         // warna berdasarkan progres
-        const colors = ["", "#d7e5ff",
-"#c4d4f4",
-"#b1c4e7",
-"#a8bbde",
-"#8ea1c5"];
+        const colors = ["", "#ebedfa","#d4d8f0", "#bcc3e6", "#a5aedc", "#8d99d2"];
         if (done > 0 && done <= 5) {
           div.style.background = colors[done];
           div.style.borderColor = "#999";
