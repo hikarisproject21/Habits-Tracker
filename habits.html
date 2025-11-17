@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Tracker Bulanan</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Delius&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    @font-face {
+  font-family: 'MyFont';
+  src: url('Super_Joyful.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+    body {
+        font-family: "Poppins", sans-serif;
+      background: linear-gradient(180deg, #ebedfa, #d4d7f0);
+      color: #333;
+      margin: auto;
+      padding: 0;
+      max-width: 400px;
+    }
+
+    .container {
+      border-radius: 20px;
+
+      /* background: linear-gradient(135deg, #c1d7bf, #87b78c); */
+      height: 100vh;
+      display: flex;
+      align-items: center;
+
+      justify-content: center;
+      flex-direction: column;
+    }
+.header{
+  display: flex;
+  direction: row;
+  width: 320px;
+  justify-content: space-between;
+}
+
+    h1 {
+        font-family: 'MyFont', sans-serif;
+      text-align: start;
+      margin-bottom: 5px;
+      font-size: 25px;
+      font-weight: normal;
+      border-radius: 5px;
+      margin: 0 auto;
+      color: #464e77;
+    }
+        h3 {
+        font-family: 'MyFont', sans-serif;
+      text-align: start;
+      font-size: 22px;
+      font-weight: normal;
+      border-radius: 5px;
+      margin: 0 auto;
+      color: #464e77;
+    }
+        h6 {
+      text-align: start;
+      margin-bottom: 5px;
+      font-size: 12px;
+      font-weight: normal;
+      border-radius: 5px;
+      margin: 0 auto;
+    }
+
+    .month-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .month-nav button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 0;
+      height: 0;
+    }
+
+    .month-nav button:hover {
+      opacity: 0.7;
+      transform: scale(1.1);
+      transition: 0.2s;
+    }
+
+    .month-nav span {
+      font-size: 0.9em;
+    }
+
+    /* Panah kiri */
+    #prevMonth {
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-right: 12px solid #333;
+    }
+
+    /* Panah kanan */
+    #nextMonth {
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 12px solid #333;
+    }
+
+    .config-btn {
+      display: block;
+      margin: 0 auto 10px auto;
+      background: #373f6f;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+             font-family: "Poppins", sans-serif;
+             font-size: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .config-btn:hover {
+           transform: scale(1.1);
+      transition: 0.2s;
+    }
+
+    /* Daftar kebiasaan di bawah tombol */
+    #habitDisplay {
+      margin-bottom: 20px;
+      text-align: center;
+      gap: 10px;
+    }
+
+ .habit-tag {
+  display: inline-block;          /* ← dari inline-block jadi block */
+  background: white;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin: 5px;        /* biar agak renggang dan rata tengah */
+  border: 1px solid #ccc;
+  font-size: 12px;         /* opsional: biar seragam lebar kotaknya */
+  text-align: center;      /* biar teksnya di tengah */
+}
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      max-width: 450px;
+      font-size: 13px;
+      margin: 0 auto;
+    }
+        .calendar-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid rgb(206, 206, 206);
+    }
+
+    .day {
+      background: white;
+      border: 1px solid #ededed;
+      border-radius: 2px;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day:hover {
+      background: #eef5ff;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      z-index: 5;
+    }
+
+    .habit-popup, .edit-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      padding: 40px;
+      z-index: 10;
+      display: none;
+      width: 250px;
+    }
+
+    .habit-popup h3, .edit-popup h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 100;
+
+    }
+
+ .habit-popup input[type='checkbox'] {
+  transform: scale(1.5);
+  accent-color: hsl(214, 53%, 76%); /* opsional */
+
+}
+    .habit-list label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .edit-popup input {
+      display: block;
+      width: 95%;
+      padding: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+           font-family: "Poppins", sans-serif;
+    }
+
+    .save-btn {
+      width: 100%;
+      background: #373f6f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+        font-family: "Poppins", sans-serif;
+      padding: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    p{
+      font-size: 14px;
+    }
+    .weekdays {
+      display: grid;
+      max-width: 400px;
+      margin: 20px auto;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+
+      align-items: center;
+      background: #e8efff;
+      padding: 5px 0;
+      border-top-left-radius: 10px;
+            font-size: 11px;
+      border-top-right-radius: 10px;
+    }
+
+    .save-btn:hover {
+           transform: scale(1.1);
+      transition: 0.2s;
+    }
+.bounce {
+  animation: bounce 1s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px); /* naik */
+  }
+  100% {
+    transform: translateY(0);     /* turun */
+  }
+}
+
+    @media (max-width: 500px) {
+      .calendar {
+        grid-template-columns: repeat(7, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="headera">
+    <h1>Habit Tracker</h1>
+         <h6>let's do a good thing</h6><br>
+     <!-- <h6>let's do a good thing</h6><br> -->
+     </div>
+     <div class="headerb">
+    <img  src="a01.png" alt="Habit Progress" class="bounce" style="width:90px;display:block;margin:-30px 0 -10px -20px;">
+     </div>
+     </div><br>
+
+
+
+    <div class="calendar-container">
+          <div class="month-nav">
+      <button id="prevMonth"></button>
+      <span id="monthYear"></span>
+      <button id="nextMonth"></button>
+    </div>
+      <div class="weekdays">
+        <div>Min</div>
+        <div>Sen</div>
+        <div>Sel</div>
+        <div>Rab</div>
+        <div>Kam</div>
+        <div>Jum</div>
+        <div>Sab</div>
+      </div>
+      <div class="calendar" id="calendar"></div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <br>
+        <div class="header">
+      <div class="headera">
+    <h3>Let’s start new habits</h3>
+
+     </div>
+     <div class="headerb">
+      <button class="config-btn" id="openEditHabits">edit habits</button>
+     </div>
+     </div>
+  
+    <div id="habitDisplay"></div>
+
+  </div>
+
+  <!-- Popup checklist harian -->
+  <div class="habit-popup" id="habitPopup">
+     <img id="habitImage" src="" alt="Habit Progress" style="width:100px;display:block;margin:0 auto 10px auto;">
+    <h3 id="popupDate"></h3>
+    <div class="habit-list" id="habitList"></div>
+    <button class="save-btn" id="saveHabits">Simpan</button>
+  </div>
+
+  <!-- Popup pengaturan kebiasaan -->
+  <div class="edit-popup" id="editPopup">
+    <h3>Atur Kebiasaan</h3>
+    <div id="habitInputs">
+      <input type="text" id="habit1" placeholder="Habit 1" />
+      <input type="text" id="habit2" placeholder="Habit 2" />
+      <input type="text" id="habit3" placeholder="Habit 3" />
+      <input type="text" id="habit4" placeholder="Habit 4" />
+      <input type="text" id="habit5" placeholder="Habit 5" />
+    </div>
+    <button class="save-btn" id="saveHabitNames">Simpan</button>
+  </div>
+
+  <script>
+    const monthYear = document.getElementById("monthYear");
+    const calendar = document.getElementById("calendar");
+    const overlay = document.getElementById("overlay");
+    const habitPopup = document.getElementById("habitPopup");
+    const popupDate = document.getElementById("popupDate");
+    const habitList = document.getElementById("habitList");
+    const editPopup = document.getElementById("editPopup");
+    const habitDisplay = document.getElementById("habitDisplay");
+
+    let currentDate = new Date();
+    let selectedDate = null;
+    let habitsData = JSON.parse(localStorage.getItem("habitsData") || "{}");
+    let habitNames = JSON.parse(localStorage.getItem("habitNames") || "{}");
+
+    // isi input habit dari localStorage
+    for (let i = 1; i <= 5; i++) {
+      const input = document.getElementById(`habit${i}`);
+      input.value = habitNames[`habit${i}`] || "";
+    }
+
+    function saveHabitNames() {
+      for (let i = 1; i <= 5; i++) {
+        const val = document.getElementById(`habit${i}`).value.trim();
+        habitNames[`habit${i}`] = val;
+      }
+      localStorage.setItem("habitNames", JSON.stringify(habitNames));
+      closePopup();
+      renderCalendar();
+      renderHabitListDisplay();
+    }
+
+    function getHabits() {
+      return Object.values(habitNames).filter(Boolean);
+    }
+
+    function renderHabitListDisplay() {
+      const habits = getHabits();
+      habitDisplay.innerHTML = "";
+      if (habits.length === 0) {
+        habitDisplay.innerHTML = "<p><i>Belum ada kebiasaan ditambahkan</i></p>";
+      } else {
+        habits.forEach(h => {
+          const tag = document.createElement("div");
+          tag.className = "habit-tag";
+          tag.textContent = h;
+          habitDisplay.appendChild(tag);
+        });
+      }
+    }
+
+    function renderCalendar() {
+      calendar.innerHTML = "";
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const habitImage = document.getElementById("habitImage");
+      
+
+
+
+      monthYear.textContent = currentDate.toLocaleString("id-ID", {
+        month: "long",
+        year: "numeric",
+      });
+
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement("div");
+        calendar.appendChild(empty);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const div = document.createElement("div");
+        div.classList.add("day");
+        div.textContent = day;
+
+        const key = `${year}-${month}-${day}`;
+        const dayData = habitsData[key] || {};
+        const habits = getHabits();
+
+        const total = habits.length;
+        const done = habits.filter(h => dayData[h]).length;
+
+        // warna berdasarkan progres
+        const colors = ["", "#d7e5ff",
+"#c4d4f4",
+"#b1c4e7",
+"#a8bbde",
+"#8ea1c5"];
+        if (done > 0 && done <= 5) {
+          div.style.background = colors[done];
+          div.style.borderColor = "#999";
+        }
+
+        div.addEventListener("click", () => openHabitPopup(day, month, year));
+        calendar.appendChild(div);
+      }
+    }
+
+    function openHabitPopup(day, month, year) {
+      selectedDate = `${year}-${month}-${day}`;
+      popupDate.textContent = `${day} ${currentDate.toLocaleString("id-ID", {
+        month: "long",
+      })} ${year}`;
+
+      habitList.innerHTML = "";
+      const habits = getHabits();
+      const data = habitsData[selectedDate] || {};
+
+          function updateHabitImage(doneCount) {
+  // Tentukan gambar sesuai jumlah checklist yang dicentang
+  const images = {
+    0: "a0.png",
+    1: "a1.png",
+    2: "a2.png",
+    3: "a3.png",
+    4: "a4.png",
+    5: "a5.png"
+  };
+
+  // ganti src gambarnya
+  habitImage.src = images[doneCount] || "a0.png";
+}
+
+let doneCount = 0;
+habits.forEach(h => {
+  const label = document.createElement("label");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = data[h] || false;
+
+  if (checkbox.checked) doneCount++;
+
+  // setiap kali user centang/ubah, update gambar
+  checkbox.addEventListener("change", () => {
+    const allCheckboxes = habitList.querySelectorAll("input[type='checkbox']");
+    const checkedCount = Array.from(allCheckboxes).filter(cb => cb.checked).length;
+    updateHabitImage(checkedCount);
+  });
+
+  label.appendChild(checkbox);
+  label.append(h);
+  habitList.appendChild(label);
+});
+
+// set gambar awal sesuai jumlah yang sudah dicentang
+updateHabitImage(doneCount);
+
+
+      overlay.style.display = "block";
+      habitPopup.style.display = "block";
+    }
+
+    function openEditPopup() {
+      overlay.style.display = "block";
+      editPopup.style.display = "block";
+    }
+
+    function closePopup() {
+      overlay.style.display = "none";
+      habitPopup.style.display = "none";
+      editPopup.style.display = "none";
+    }
+
+    function saveHabits() {
+      const habits = getHabits();
+      const checkboxes = habitList.querySelectorAll("input[type='checkbox']");
+      const data = {};
+      checkboxes.forEach((cb, i) => {
+        data[habits[i]] = cb.checked;
+      });
+      habitsData[selectedDate] = data;
+      localStorage.setItem("habitsData", JSON.stringify(habitsData));
+      closePopup();
+      renderCalendar();
+    }
+
+    document.getElementById("prevMonth").addEventListener("click", () => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      renderCalendar();
+    });
+
+    document.getElementById("nextMonth").addEventListener("click", () => {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      renderCalendar();
+    });
+
+    document.getElementById("saveHabits").addEventListener("click", saveHabits);
+    document.getElementById("saveHabitNames").addEventListener("click", saveHabitNames);
+    document.getElementById("openEditHabits").addEventListener("click", openEditPopup);
+    overlay.addEventListener("click", closePopup);
+
+    renderCalendar();
+    renderHabitListDisplay(); // tampilkan daftar habit saat awal load
+  </script>
+</body>
+</html>
