@@ -16,7 +16,7 @@
 }
     body {
         font-family: "Poppins", sans-serif;
-      background: linear-gradient(180deg, #ebedfa, #d4d7f0);
+      background: linear-gradient(180deg, #fef7ff, #dcd4f0);
       color: #333;
       margin: auto;
       padding: 0;
@@ -45,11 +45,11 @@
         font-family: 'MyFont', sans-serif;
       text-align: start;
       margin-bottom: 5px;
-      font-size: 25px;
+      font-size: 28px;
       font-weight: normal;
       border-radius: 5px;
       margin: 0 auto;
-      color: #464e77;
+      color: #664677;
     }
         h3 {
         font-family: 'MyFont', sans-serif;
@@ -252,7 +252,7 @@
       text-align: center;
 
       align-items: center;
-      background: #e8efff;
+      background: #f9ebfa;
       padding: 5px 0;
       border-top-left-radius: 10px;
             font-size: 11px;
@@ -295,7 +295,7 @@
      <!-- <h6>let's do a good thing</h6><br> -->
      </div>
      <div class="headerb">
-    <img  src="a01.png" alt="Habit Progress" class="bounce" style="width:90px;display:block;margin:-30px 0 -10px -20px;">
+    <img  src="b4.PNG" alt="Habit Progress" class="bounce" style="width:120px;display:block;margin:-30px 0 -10px -20px;">
      </div>
      </div><br>
 
@@ -441,7 +441,13 @@
         const done = habits.filter(h => dayData[h]).length;
 
         // warna berdasarkan progres
-        const colors = ["", "#ebedfa","#d4d8f0", "#bcc3e6", "#a5aedc", "#8d99d2"];
+        const colors = ["", 
+  "#e4dcf5",
+  "#cfc7e6",
+  "#ebe6fa",
+  "#d1cbea",
+  "#f0ecfb"
+];
         if (done > 0 && done <= 5) {
           div.style.background = colors[done];
           div.style.borderColor = "#999";
@@ -465,12 +471,12 @@
           function updateHabitImage(doneCount) {
   // Tentukan gambar sesuai jumlah checklist yang dicentang
   const images = {
-    0: "a0.png",
-    1: "a1.png",
-    2: "a2.png",
-    3: "a3.png",
-    4: "a4.png",
-    5: "a5.png"
+    0: "b0.PNG",
+    1: "b1.PNG",
+    2: "b2.PNG",
+    3: "b3.PNG",
+    4: "b4.PNG",
+    5: "b5.PNG"
   };
 
   // ganti src gambarnya
